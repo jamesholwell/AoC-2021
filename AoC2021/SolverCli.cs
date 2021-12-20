@@ -1,3 +1,5 @@
+using System.Text.RegularExpressions;
+
 namespace AoC2021;
 
 using System.CommandLine;
@@ -10,6 +12,8 @@ internal class SolverCli {
     private readonly IConsole console;
 
     private readonly SolverFactory factory;
+
+    private readonly Regex filenameSanitizer = new Regex("[^a-z0-9]", RegexOptions.IgnoreCase);
 
     public SolverCli(IConsole console, SolverFactory factory) {
         this.console = console;
@@ -43,8 +47,11 @@ internal class SolverCli {
         }
 
         Console.ForegroundColor = ConsoleColor.DarkGray;
-        this.console.WriteLine($"# Using solver {solver.GetType().FullName}:");
+        this.console.WriteLine($"# Using solver {solver.GetType().FullName}");
         Console.ResetColor();
+
+        if (string.IsNullOrWhiteSpace(inputPath))
+            inputPath = $"./inputs/{filenameSanitizer.Replace(day, string.Empty)}.txt";
         
         if (!File.Exists(inputPath)) {
             Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -53,6 +60,10 @@ internal class SolverCli {
 
             return;
         }
+        
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        this.console.WriteLine($"# Using input {Path.GetFileName(inputPath)}");
+        Console.ResetColor();
 
         var input = File.ReadAllText(inputPath);
 
