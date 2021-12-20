@@ -31,3 +31,6 @@ _TeamCity*
 /modules.xml
 /contentModel.xml
 
+# Inputs
+AoC2021/inputs
+!AoC2021/inputs/day0.txt
