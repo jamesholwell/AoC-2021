@@ -7,4 +7,5 @@ module Day0 =
 
 type Day0() =
     interface ISolver with
-        member this.Solve(s: string) = Day0.Solve s
+        member this.SolvePartOne(s: string) = Day0.Solve s
+        member this.SolvePartTwo(s: string) = failwith "NotImplemented"

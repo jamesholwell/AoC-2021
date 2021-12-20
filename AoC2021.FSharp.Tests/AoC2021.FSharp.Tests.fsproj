@@ -26,7 +26,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AoC2021.FSharp\AoC2021.FSharp.fsproj"/>
+        <ProjectReference Include="..\AoC2021.FSharp\AoC2021.FSharp.fsproj" />
     </ItemGroup>
 
 </Project>

@@ -16,7 +16,7 @@ internal class SolverCli {
         this.factory = factory;
     }
 
-    public void Execute(string day, string inputPath, string solverHint) {
+    public void Execute(string day, string inputPath, string solverHint, int part) {
         // resolve solver
         ISolver? solver;
         try {
@@ -58,7 +58,13 @@ internal class SolverCli {
 
         var sw = new Stopwatch();
         sw.Start();
-        var solution = solver.Solve(input);
+
+        var solution = part switch {
+            1 => solver.SolvePartOne(input),
+            2 => solver.SolvePartTwo(input),
+            _ => throw new ArgumentOutOfRangeException(nameof(part), "Only parts 1 and 2 are accepted")
+        };
+        
         sw.Stop();
         
         

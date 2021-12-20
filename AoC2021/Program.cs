@@ -6,20 +6,22 @@ using AoC2021.Core;
 var dayArgument = new Argument<string>("day", "Which puzzle to solve e.g. day1");
 var inputArgument = new Argument<string>("input", "Path to puzzle input");
 var solverArgument = new Option<string>("--solver", "Puzzle solver to use e.g. csharp, fsharp or specify solver name");
+var partArgument = new Option<bool>("--part2", "Use part two solver");
 
-var root = new RootCommand { dayArgument, inputArgument, solverArgument };
+var root = new RootCommand { dayArgument, inputArgument, solverArgument, partArgument };
 root.SetHandler(
-    (IConsole console, string day, string inputPath, string solverHint) => {
+    (IConsole console, string day, string inputPath, string solverHint, bool isPartTwo) => {
         var factory =
             new SolverFactory()
                 .AddAssembly<AoC2021.CSharp.Day0>("csharp")
                 .AddAssembly<AoC2021.FSharp.Day0>("fsharp");
 
         var cli = new SolverCli(console, factory);
-        cli.Execute(day, inputPath, solverHint);
+        cli.Execute(day, inputPath, solverHint, isPartTwo ? 2 : 1);
     },
     dayArgument,
     inputArgument,
-    solverArgument);
+    solverArgument,
+    partArgument);
 
 await root.InvokeAsync(args);

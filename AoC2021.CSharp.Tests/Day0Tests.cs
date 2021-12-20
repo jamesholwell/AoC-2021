@@ -8,7 +8,7 @@ public class Day10Tests {
         const string ExampleInput = @"foo";
 
         var solver = new Day0();
-        var actual = solver.Solve(ExampleInput);
+        var actual = solver.SolvePartOne(ExampleInput);
 
         Assert.Equal("Day 0 C#: foo", actual);
     }
@@ -18,7 +18,7 @@ public class Day10Tests {
         const string ExampleInput = @"foo";
 
         var solver = new Day0Alternative();
-        var actual = solver.Solve(ExampleInput);
+        var actual = solver.SolvePartOne(ExampleInput);
 
         Assert.Equal("Day 0 C# Alternative: foo", actual);
     }

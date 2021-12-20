@@ -10,7 +10,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\AoC2021.Core\AoC2021.Core.csproj"/>
+        <ProjectReference Include="..\AoC2021.Core\AoC2021.Core.csproj" />
     </ItemGroup>
 
 </Project>
