@@ -9,6 +9,7 @@
         <Compile Include="Shared.fs" />
         <Compile Include="Day0.fs" />
         <Compile Include="Day0.Alternative.fs" />
+        <Compile Include="Day1.fs" />
     </ItemGroup>
 
     <ItemGroup>
