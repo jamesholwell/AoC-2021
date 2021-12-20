@@ -10,6 +10,12 @@ module Day1 =
 
     let Solve = Shared.SplitInt >> CountIncreases
 
+    let SolveWindowed =
+        Shared.SplitInt
+        >> Seq.windowed 3
+        >> Seq.map Seq.sum
+        >> CountIncreases
+
     let exampleInput =
         @"199
 200
@@ -28,7 +34,12 @@ module Day1 =
         let actual = Solve exampleInput
         Assert.Equal(7, actual)
 
+    [<Fact>]
+    let ``Solves Part Two Example`` () =
+        let actual = SolveWindowed exampleInput
+        Assert.Equal(5, actual)
+
 type Day1(input: string) =
     interface ISolver with
         member this.SolvePartOne() = Day1.Solve input
-        member this.SolvePartTwo() = failwith "NotImplemented"
+        member this.SolvePartTwo() = Day1.SolveWindowed input
