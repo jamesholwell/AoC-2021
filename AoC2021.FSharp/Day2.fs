@@ -13,15 +13,19 @@ module Day2 =
         | Prefix "down"    x -> (h, d + x)
         | Prefix "up"      x -> (h, d - x)
         | _                  -> (h, d)
+        
+    let GetMagnitude (h, d) = h * d |> string
     
-    let GetMagnitude = fun (h, d) -> h * d
-            
-    let Solve =
-        Shared.Split >>
-        Seq.fold UpdateVector (0,0) >>
-        GetMagnitude
+    let UpdateAimedVector = fun (h, d, a) s ->
+        match s with
+        | Prefix "forward" x -> (h + x, d + x * a, a)
+        | Prefix "down"    x -> (h, d, a + x)
+        | Prefix "up"      x -> (h, d, a - x)
+        | _                  -> (h, d, a)
+        
+    let GetMagnitude3 (h, d, _) = h * d |> string
 
 type Day2() =
     interface ISolver with
-        member this.SolvePartOne(s: string) = Day2.Solve s |> string
-        member this.SolvePartTwo(s: string) = ""
+        member this.SolvePartOne(s: string) = Shared.Split s |> Seq.fold Day2.UpdateVector (0,0) |> Day2.GetMagnitude
+        member this.SolvePartTwo(s: string) = Shared.Split s |> Seq.fold Day2.UpdateAimedVector (0,0,0) |> Day2.GetMagnitude3

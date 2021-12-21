@@ -18,4 +18,10 @@ let ``Solves Part One Example`` () =
     let solver = upcast new Day2() : ISolver
     let actual = solver.SolvePartOne exampleInput
     Assert.Equal("150", actual)
+
+[<Fact>]
+let ``Solves Part Two Example`` () =
+    let solver = upcast new Day2() : ISolver
+    let actual = solver.SolvePartTwo exampleInput
+    Assert.Equal("900", actual)
     
