@@ -2,6 +2,6 @@
 
     open System
 
-    let Split (s: string) = s.Split ("\n", StringSplitOptions.RemoveEmptyEntries)
+    let Split (s: string) = s.Replace("\r\n", "\n").Split ("\n", StringSplitOptions.RemoveEmptyEntries)
     
     let SplitInt = Split >> Seq.map int
