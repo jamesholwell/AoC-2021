@@ -32,7 +32,7 @@ let ``Roller scores as expected`` () =
     
 [<Fact>]
 let ``Turn taker behaves as expected`` () =
-    let rules = { BoardSize = 10; Die = seq { 0 }; NumberOfRolls = 3; TargetScore = 1000 }
+    let rules = { BoardSize = 10; NumberOfRolls = 3; TargetScore = 1000 }
     let state = { Name = "Test"; Location = 4; Score = 0; Rolls = 0 }
     Assert.Equal({ Name = "Test"; Location = 7; Score = 7; Rolls = 3 }, TakeTurn rules state 3)
     Assert.Equal({ Name = "Test"; Location = 1; Score = 1; Rolls = 3 }, TakeTurn rules state 7)
@@ -42,3 +42,9 @@ let ``Solves Part One Example`` () =
     let solver = upcast new Day21() : ISolver
     let actual = solver.SolvePartOne exampleInput
     Assert.Equal("739785", actual)
+    
+[<Fact>]
+let ``Solves Part Two Example`` () =
+    let solver = upcast new Day21() : ISolver
+    let actual = solver.SolvePartTwo exampleInput
+    Assert.Equal("444356092776315", actual)
