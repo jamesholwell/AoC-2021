@@ -1,29 +1,23 @@
-﻿namespace AoC2021.CSharp;
+﻿using AoC2021.Core;
 
-using System.Text;
+using Xunit;
 
-using AoC2021.Core;
+namespace AoC2021.CSharp;
 
-public class Day0 : ISolver {
-    public string SolvePartOne(string input) {
-        return "Day 0 C#: " + input;
+public class Day0 : Solver {
+    public Day0(string? input) : base(input) { }
+
+    public override string SolvePartOne() {
+        return "Day 0 C#: " + Input;
     }
 
-    public string SolvePartTwo(string input) {
-        throw new NotImplementedException();
-    }
-}
+    [Fact]
+    public void SolvesExample() {
+        const string? exampleInput = @"foo";
 
-[Solver("day0", "alternative")]
-public class Day0Alternative : ISolver {
-    public string SolvePartOne(string input) {
-        var sb = new StringBuilder(32);
-        sb.Append("Day 0 C# Alternative: ");
-        sb.Append(input);
-        return sb.ToString();
-    }
+        var solver = new Day0(exampleInput);
+        var actual = solver.SolvePartOne();
 
-    public string SolvePartTwo(string input) {
-        throw new NotImplementedException();
+        Assert.Equal("Day 0 C#: foo", actual);
     }
 }

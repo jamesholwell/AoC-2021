@@ -5,17 +5,17 @@ using System.Reflection;
 public class SolverFactory {
     private readonly Dictionary<string, Type> solvers;
 
-    public SolverFactory(params Assembly[] assemblies) {
+    public SolverFactory() {
         this.solvers = new Dictionary<string, Type>();
     }
 
-    public ISolver? Create(string day, string? solver = null) {
+    public ISolver? Create(string day, string input, string? solver = null) {
         var prefix = $"{day.ToLowerInvariant()}-{solver}";
         var candidates = this.solvers.Keys.Where(k => k.StartsWith(prefix)).ToArray();
 
         switch (candidates.Length) {
             case 0: return null;
-            case 1: return Activator.CreateInstance(this.solvers[candidates.Single()]) as ISolver;
+            case 1: return Activator.CreateInstance(this.solvers[candidates.Single()], input) as ISolver;
             default:
                 throw new AmbiguousSolverException(candidates);
         }

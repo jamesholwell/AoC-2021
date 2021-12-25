@@ -17,7 +17,7 @@ root.SetHandler(
                 .AddAssembly<AoC2021.FSharp.Day0>("fsharp");
 
         var cli = new SolverCli(console, factory);
-        cli.Execute(day, inputPath, solverHint, isPartTwo ? 2 : 1);
+        cli.Execute(day, inputPath, solverHint, isPartTwo);
     },
     dayArgument,
     inputArgument,

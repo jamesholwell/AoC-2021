@@ -1,7 +1,10 @@
 ﻿module AoC2021.FSharp.Shared
 
-    open System
+open System
 
-    let Split (s: string) = s.Replace("\r\n", "\n").Split ("\n", StringSplitOptions.RemoveEmptyEntries)
-    
-    let SplitInt = Split >> Seq.map int
+let Split (s: string) =
+    s
+        .Replace("\r\n", "\n")
+        .Split("\n", StringSplitOptions.RemoveEmptyEntries)
+
+let SplitInt = Split >> Seq.map int

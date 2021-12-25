@@ -20,11 +20,29 @@ internal class SolverCli {
         this.factory = factory;
     }
 
-    public void Execute(string day, string inputPath, string solverHint, int part) {
+    public void Execute(string day, string inputPath, string solverHint, bool isPartTwo) {
+        // read input
+        if (string.IsNullOrWhiteSpace(inputPath))
+            inputPath = $"./inputs/{filenameSanitizer.Replace(day, string.Empty)}.txt";
+        
+        if (!File.Exists(inputPath)) {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            this.console.WriteLine($"Path not found: {inputPath}");
+            Console.ResetColor();
+
+            return;
+        }
+        
+        var input = File.ReadAllText(inputPath);
+        
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        this.console.WriteLine($"# Using input {Path.GetFileName(inputPath)} ({input.Length} characters)");
+        Console.ResetColor();
+        
         // resolve solver
         ISolver? solver;
         try {
-            solver = this.factory.Create(day, solverHint);
+            solver = this.factory.Create(day, input, solverHint);
         }
         catch (AmbiguousSolverException e) {
             Console.ForegroundColor = ConsoleColor.DarkRed;
@@ -49,38 +67,22 @@ internal class SolverCli {
         Console.ForegroundColor = ConsoleColor.DarkGray;
         this.console.WriteLine($"# Using solver {solver.GetType().FullName}");
         Console.ResetColor();
-
-        if (string.IsNullOrWhiteSpace(inputPath))
-            inputPath = $"./inputs/{filenameSanitizer.Replace(day, string.Empty)}.txt";
         
-        if (!File.Exists(inputPath)) {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            this.console.WriteLine("Path not found");
-            Console.ResetColor();
-
-            return;
-        }
-        
-        Console.ForegroundColor = ConsoleColor.DarkGray;
-        this.console.WriteLine($"# Using input {Path.GetFileName(inputPath)}");
-        Console.ResetColor();
-
-        var input = File.ReadAllText(inputPath);
-
         var sw = new Stopwatch();
         sw.Start();
 
-        var solution = part switch {
-            1 => solver.SolvePartOne(input),
-            2 => solver.SolvePartTwo(input),
-            _ => throw new ArgumentOutOfRangeException(nameof(part), "Only parts 1 and 2 are accepted")
+        var solution = isPartTwo switch {
+            false => solver.SolvePartOne(),
+            true => solver.SolvePartTwo()
         };
         
         sw.Stop();
         
-        
         Console.ForegroundColor = ConsoleColor.DarkGray;
-        this.console.WriteLine($"# Runtime {sw.ElapsedMilliseconds}ms");
+        if (sw.ElapsedMilliseconds > 0)
+            this.console.WriteLine($"# Runtime {sw.ElapsedMilliseconds}ms");
+        else
+            this.console.WriteLine($"# Runtime {sw.ElapsedTicks} ticks");
         Console.ResetColor();
 
         this.console.WriteLine(string.Empty);
