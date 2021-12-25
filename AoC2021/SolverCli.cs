@@ -1,3 +1,4 @@
+using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace AoC2021;
@@ -20,25 +21,9 @@ internal class SolverCli {
         this.factory = factory;
     }
 
-    public void Execute(string day, string inputPath, string solverHint, bool isPartTwo) {
-        // read input
-        if (string.IsNullOrWhiteSpace(inputPath))
-            inputPath = $"./inputs/{filenameSanitizer.Replace(day, string.Empty)}.txt";
-        
-        if (!File.Exists(inputPath)) {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
-            this.console.WriteLine($"Path not found: {inputPath}");
-            Console.ResetColor();
+    public void Solve(string day, string inputPath, string solverHint, bool isPartTwo) {
+        if (!TryReadInput(day, inputPath, out var input)) return;
 
-            return;
-        }
-        
-        var input = File.ReadAllText(inputPath);
-        
-        Console.ForegroundColor = ConsoleColor.DarkGray;
-        this.console.WriteLine($"# Using input {Path.GetFileName(inputPath)} ({input.Length} characters)");
-        Console.ResetColor();
-        
         // resolve solver
         ISolver? solver;
         try {
@@ -87,5 +72,91 @@ internal class SolverCli {
 
         this.console.WriteLine(string.Empty);
         this.console.WriteLine(solution);
+    }
+
+    public void Benchmark(string day, string inputPath, string solverHint, bool isPartTwo) {
+        if (!TryReadInput(day, inputPath, out var input)) return;
+
+        var solvers = this.factory.CreateAll(day, input);
+
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        this.console.WriteLine($"# Found {solvers.Count} solvers");
+        Console.ResetColor();
+
+        this.console.WriteLine(string.Empty);
+        this.console.WriteLine($"|{"Solver",-25}|{"Solution",-35}|{"Runtime",-15}|");
+        this.console.WriteLine("|-------------------------|-----------------------------------|---------------|");
+
+        foreach (var pair in solvers) {
+            var solverName = pair.Key;
+            var solver = pair.Value;
+            
+            var sw = new Stopwatch();
+            var runs = 1;
+            var solution = string.Empty;
+            
+            sw.Start();
+            solution = isPartTwo switch {
+                false => solver.SolvePartOne(),
+                true => solver.SolvePartTwo()
+            };
+            sw.Stop();
+
+            if (sw.ElapsedMilliseconds < 1000) {
+                // do warmup for fast solvers
+                while (sw.Elapsed.Seconds < 5 && ++runs < 1000) {
+                    solution = isPartTwo switch {
+                        false => solver.SolvePartOne(),
+                        true => solver.SolvePartTwo()
+                    };
+                }
+                runs = 0;
+                sw.Reset();
+                
+                sw.Start();
+                while (sw.Elapsed.Seconds < 10 && ++runs < 10000) {
+                    solution = isPartTwo switch {
+                        false => solver.SolvePartOne(),
+                        true => solver.SolvePartTwo()
+                    };
+                }
+                sw.Stop();
+            }
+            
+            var averageMs = sw.ElapsedMilliseconds / (double)runs;
+            var runtime = averageMs switch {
+                > 5000 => $"{averageMs / 1000:N1}s",
+                > 1000 => $"{averageMs / 1000:N2}s",
+                > 50 => $"{averageMs:N0}ms",
+                _ => $"{sw.ElapsedTicks / (double)runs} ticks"
+            };
+
+            this.console.WriteLine($"|{solverName,-25}|{solution.Trim(),-35}|{runtime,15}|");
+        }
+        
+        this.console.WriteLine("|-------------------------|-----------------------------------|---------------|");
+        this.console.WriteLine(string.Empty);
+    }
+
+    private bool TryReadInput(string day, string path, out string input) {
+        if (string.IsNullOrWhiteSpace(path))
+            path = $"./inputs/{filenameSanitizer.Replace(day, string.Empty)}.txt";
+
+        if (!File.Exists(path)) {
+            Console.ForegroundColor = ConsoleColor.DarkRed;
+            this.console.WriteLine($"Path not found: {path}");
+            Console.ResetColor();
+
+            input = string.Empty;
+            return false;
+        }
+
+        input = File.ReadAllText(path);
+
+        Console.ForegroundColor = ConsoleColor.DarkGray;
+        this.console.WriteLine($"# Using input {Path.GetFileName(path)} ({input.Length} characters)");
+        Console.ResetColor();
+        
+        return true;
     }
 }

@@ -13,13 +13,16 @@ public class SolverFactory {
         var prefix = $"{day.ToLowerInvariant()}-{solver}";
         var candidates = this.solvers.Keys.Where(k => k.StartsWith(prefix)).ToArray();
 
-        switch (candidates.Length) {
-            case 0: return null;
-            case 1: return Activator.CreateInstance(this.solvers[candidates.Single()], input) as ISolver;
-            default:
-                throw new AmbiguousSolverException(candidates);
-        }
+        return candidates.Length switch {
+            1 => Activator.CreateInstance(this.solvers[candidates.Single()], input) as ISolver,
+            0 => null,
+            _ => throw new AmbiguousSolverException(candidates)
+        };
     }
+
+    public IDictionary<string, ISolver> CreateAll(string day, string input) =>
+        this.solvers.Keys.Where(k => k.StartsWith($"{day.ToLowerInvariant()}-"))
+            .ToDictionary(k => k, k => (ISolver) Activator.CreateInstance(this.solvers[k], input)!);
 
     public SolverFactory AddAssembly<T>(string prefix) {
         foreach (var type in typeof(T).Assembly.GetTypes().Where(t => typeof(ISolver).IsAssignableFrom(t))) {
