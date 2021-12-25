@@ -18,8 +18,8 @@ var root = new RootCommand { dayArgument, inputArgument, solverArgument, partArg
 root.SetHandler(
     (IConsole console, string day, string inputPath, string solverHint, bool isPartTwo, bool isBenchmarking) => {
         var cli = new SolverCli(console, factory);
-        
-        if (isBenchmarking) 
+
+        if (isBenchmarking)
             cli.Benchmark(day, inputPath, solverHint, isPartTwo);
         else
             cli.Solve(day, inputPath, solverHint, isPartTwo);

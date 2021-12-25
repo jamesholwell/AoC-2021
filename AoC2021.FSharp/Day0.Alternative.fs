@@ -5,12 +5,12 @@ open Xunit
 
 module Day0Alternative =
     let Solve (s: string) =
-       let rec inner l = 
+        let rec inner l =
             match l with
             | head :: tail -> head * inner tail
             | [] -> 1L
-       
-       s |> Seq.map int64 |> Seq.toList |> inner
+
+        s |> Seq.map int64 |> Seq.toList |> inner
 
     [<Fact>]
     let ``Solves Example`` () =

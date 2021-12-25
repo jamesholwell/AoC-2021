@@ -4,7 +4,8 @@ open AoC2021.Core
 open Xunit
 
 module Day0 =
-    let Solve = Seq.fold (fun acc item -> acc * int64 item) 1L
+    let Solve =
+        Seq.fold (fun acc item -> acc * int64 item) 1L
 
     [<Fact>]
     let ``Solves Example`` () =

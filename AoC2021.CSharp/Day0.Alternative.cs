@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-using AoC2021.Core;
+﻿using AoC2021.Core;
 
 using Xunit;
 
@@ -13,7 +11,7 @@ public class Day0Alternative : Solver {
     public override long SolvePartOne() {
         long hash = 1;
         for (var i = 0; i < Input.Length; ++i) hash *= Input[i];
-        
+
         return hash;
     }
 
