@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text.RegularExpressions;
 
 namespace AoC2021;
@@ -6,7 +5,7 @@ namespace AoC2021;
 using System.CommandLine;
 using System.Diagnostics;
 
-using AoC2021.Core;
+using Core;
 
 // TODO: replace colours with System.CommandLine.Rendering
 internal class SolverCli {
@@ -71,7 +70,7 @@ internal class SolverCli {
         Console.ResetColor();
 
         this.console.WriteLine(string.Empty);
-        this.console.WriteLine(solution);
+        this.console.WriteLine(solution.ToString());
     }
 
     public void Benchmark(string day, string inputPath, string solverHint, bool isPartTwo) {
@@ -84,8 +83,9 @@ internal class SolverCli {
         Console.ResetColor();
 
         this.console.WriteLine(string.Empty);
-        this.console.WriteLine($"|{"Solver",-25}|{"Solution",-35}|{"Runtime",-15}|");
-        this.console.WriteLine("|-------------------------|-----------------------------------|---------------|");
+        this.console.WriteLine("|--------------------------------|---------------------------|----------------------|");
+        this.console.WriteLine($"| {"Solver",-30} | {"Solution",-25} | {"Runtime",-20} |");
+        this.console.WriteLine("|--------------------------------|---------------------------|----------------------|");
 
         foreach (var pair in solvers) {
             var solverName = pair.Key;
@@ -93,10 +93,9 @@ internal class SolverCli {
             
             var sw = new Stopwatch();
             var runs = 1;
-            var solution = string.Empty;
-            
+
             sw.Start();
-            solution = isPartTwo switch {
+            var solution = isPartTwo switch {
                 false => solver.SolvePartOne(),
                 true => solver.SolvePartTwo()
             };
@@ -131,10 +130,10 @@ internal class SolverCli {
                 _ => $"{sw.ElapsedTicks / (double)runs} ticks"
             };
 
-            this.console.WriteLine($"|{solverName,-25}|{solution.Trim(),-35}|{runtime,15}|");
+            this.console.WriteLine($"| {solverName,-30} | {solution, -25} | {runtime,20} |");
         }
         
-        this.console.WriteLine("|-------------------------|-----------------------------------|---------------|");
+        this.console.WriteLine("|--------------------------------|---------------------------|----------------------|");
         this.console.WriteLine(string.Empty);
     }
 

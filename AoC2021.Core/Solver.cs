@@ -7,11 +7,11 @@ public abstract class Solver : ISolver {
 
     protected string Input { get; }
 
-    public virtual string SolvePartOne() {
+    public virtual long SolvePartOne() {
         throw new NotImplementedException();
     }
 
-    public virtual string SolvePartTwo() {
+    public virtual long SolvePartTwo() {
         throw new NotImplementedException();
     }
 }

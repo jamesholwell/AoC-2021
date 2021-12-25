@@ -5,10 +5,10 @@ using Xunit;
 namespace AoC2021.CSharp;
 
 public class Day0 : Solver {
-    public Day0(string? input) : base(input) { }
+    public Day0(string? input = null) : base(input) { }
 
-    public override string SolvePartOne() {
-        return "Day 0 C#: " + Input;
+    public override long SolvePartOne() {
+        return Input.ToCharArray().Aggregate(1L, (current, c) => current * c);
     }
 
     [Fact]
@@ -18,6 +18,6 @@ public class Day0 : Solver {
         var solver = new Day0(exampleInput);
         var actual = solver.SolvePartOne();
 
-        Assert.Equal("Day 0 C#: foo", actual);
+        Assert.Equal(1256742, actual);
     }
 }

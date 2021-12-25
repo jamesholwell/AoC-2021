@@ -6,15 +6,15 @@ using Xunit;
 
 namespace AoC2021.CSharp;
 
-[Solver("day0", "stringbuilder")]
+[Solver("day0", "for-loop")]
 public class Day0Alternative : Solver {
     public Day0Alternative(string? input = null) : base(input) { }
 
-    public override string SolvePartOne() {
-        var sb = new StringBuilder(32);
-        sb.Append("Day 0 C# Alternative: ");
-        sb.Append(Input);
-        return sb.ToString();
+    public override long SolvePartOne() {
+        long hash = 1;
+        for (var i = 0; i < Input.Length; ++i) hash *= Input[i];
+        
+        return hash;
     }
 
     [Fact]
@@ -24,6 +24,6 @@ public class Day0Alternative : Solver {
         var solver = new Day0Alternative(exampleInput);
         var actual = solver.SolvePartOne();
 
-        Assert.Equal("Day 0 C# Alternative: foo", actual);
+        Assert.Equal(1256742, actual);
     }
 }
