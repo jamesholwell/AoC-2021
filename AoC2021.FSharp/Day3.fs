@@ -4,21 +4,45 @@ open AoC2021.Core
 open Xunit
 
 module Day3 =
-    let Solve input =
-        let splitInput = Shared.Split input
-        
-        let onBitIncidences =
-            Array.fold
-                (fun acc (item: string) -> Array.mapi (fun i x -> if item[i] = '1' then x + 1 else x) acc)
-                (Array.zeroCreate splitInput[0].Length)
-                splitInput
-           
-        let bin2dec = Array.reduce (fun a b -> a * 2 + b) 
-           
-        let threshold = splitInput.Length / 2
-        let gamma   = onBitIncidences |> Array.map (fun i -> if i > threshold then 1 else 0) |> bin2dec 
-        let epsilon = onBitIncidences |> Array.map (fun i -> if i > threshold then 0 else 1) |> bin2dec 
+    let flip = fun x -> 1 - x
+
+    let mostCommonBit offset (entries: int[][]) : int =
+        entries
+        |> Array.map (fun e -> if e[offset] = 1 then 1 else -1)
+        |> Array.sum
+        |> fun s -> if s >= 0 then 1 else 0
+
+    let leastCommonBit o = mostCommonBit o >> flip
+
+    let decode s = match s with | '1' -> 1 | _ -> 0
+
+    let decodeLines = Array.map (Seq.map decode >> Seq.toArray)
+
+    let asDecimal = Seq.reduce (fun a b -> a * 2 + b)
+
+    let SolvePartOne input =
+        let entries = Shared.Split input |> decodeLines
+
+        let bits =
+            seq { for i in 0 .. (entries[0].Length - 1) -> mostCommonBit i entries }
+
+        let gamma = bits |> asDecimal
+        let epsilon = Seq.map flip bits |> asDecimal
         gamma * epsilon
+
+    let SolvePartTwo input =
+        let entries = Shared.Split input |> decodeLines
+
+        let rec sieve selector offset entries =
+            match entries with
+            | [| entry |] -> entry |> asDecimal
+            | _ ->
+                let mcb = selector offset entries
+                sieve selector (offset + 1) (Array.filter (fun (c: int []) -> c[offset] = mcb) entries)
+
+        let oxyReading = sieve mostCommonBit 0 entries
+        let co2Reading = sieve leastCommonBit 0 entries
+        oxyReading * co2Reading
 
     let exampleInput = @"
 00100
@@ -37,11 +61,15 @@ module Day3 =
 
     [<Fact>]
     let ``Solves Part One Example`` () =
-        let actual = Solve exampleInput
+        let actual = SolvePartOne exampleInput
         Assert.Equal(198, actual)
-    
-        
+
+    [<Fact>]
+    let ``Solves Part Two Example`` () =
+        let actual = SolvePartTwo exampleInput
+        Assert.Equal(230, actual)
+
 type Day3(input: string) =
     interface ISolver with
-        member this.SolvePartOne() = Day3.Solve input
-        member this.SolvePartTwo() = failwith "NotImplemented"
+        member this.SolvePartOne() = Day3.SolvePartOne input
+        member this.SolvePartTwo() = Day3.SolvePartTwo input
